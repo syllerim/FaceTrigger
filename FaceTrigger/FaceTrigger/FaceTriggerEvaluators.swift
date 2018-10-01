@@ -38,50 +38,32 @@ class SmileEvaluator: FaceTriggerEvaluatorProtocol {
 }
 
 class BlinkEvaluator: BothEvaluator {
-    
-    func onBoth(delegate: FaceTriggerDelegate, newBoth: Bool) {
-        delegate.onBlinkDidChange?(blinking: newBoth)
-        if newBoth {
+
+    static var onBoth: (FaceTriggerDelegate, Bool) -> Void = {  delegate, onBoth in
+        delegate.onBlinkDidChange?(blinking: onBoth)
+        if onBoth {
             delegate.onBlink?()
         }
     }
-    
-    func onLeft(delegate: FaceTriggerDelegate, newLeft: Bool) {
-        delegate.onBlinkLeftDidChange?(blinkingLeft: newLeft)
-        if newLeft {
-            delegate.onBlinkLeft?()
-        }
-    }
-    
-    func onRight(delegate: FaceTriggerDelegate, newRight: Bool) {
-        delegate.onBlinkRightDidChange?(blinkingRight: newRight)
-        if newRight {
-            delegate.onBlinkRight?()
-        }
-    }
-    
+
     init(threshold: Float) {
-        super.init(threshold: threshold, leftKey: .eyeBlinkLeft, rightKey: .eyeBlinkRight, onBoth: onBoth, onLeft: onLeft, onRight: onRight)
+        super.init(threshold: threshold, leftKey: .eyeBlinkLeft, rightKey: .eyeBlinkRight, onBoth: BlinkEvaluator.onBoth, onLeft: BlinkEvaluator.onBoth, onRight: BlinkEvaluator.onBoth)
     }
 }
 
 class BrowDownEvaluator: BothEvaluator {
-    
-    func onBoth(delegate: FaceTriggerDelegate, newBoth: Bool) {
-        delegate.onBrowDownDidChange?(browDown: newBoth)
-        if newBoth {
+
+    static var onBoth: (FaceTriggerDelegate, Bool) -> Void = {  delegate, onBoth in
+        delegate.onBrowDownDidChange?(browDown: onBoth)
+        if onBoth {
             delegate.onBrowDown?()
         }
     }
-    
-    func onLeft(delegate: FaceTriggerDelegate, newLeft: Bool) {
-    }
-    
-    func onRight(delegate: FaceTriggerDelegate, newRight: Bool) {
-    }
-    
+
+    static var onVoid: (FaceTriggerDelegate, Bool) -> Void =  { _, _ in }
+
     init(threshold: Float) {
-        super.init(threshold: threshold, leftKey: .browDownLeft, rightKey: .browDownRight, onBoth: onBoth, onLeft: onLeft, onRight: onRight)
+        super.init(threshold: threshold, leftKey: .browDownLeft, rightKey: .browDownRight, onBoth: BlinkEvaluator.onBoth, onLeft: BrowDownEvaluator.onVoid, onRight: BrowDownEvaluator.onVoid)
     }
 }
 
@@ -111,13 +93,14 @@ class BrowUpEvaluator: FaceTriggerEvaluatorProtocol {
 }
 
 class SquintEvaluator: BothEvaluator {
-    
-    func onBoth(delegate: FaceTriggerDelegate, newBoth: Bool) {
-        delegate.onSquintDidChange?(squinting: newBoth)
-        if newBoth {
+
+    static var onBoth: (FaceTriggerDelegate, Bool) -> Void = {  delegate, onBoth in
+        delegate.onSquintDidChange?(squinting: onBoth)
+        if onBoth {
             delegate.onSquint?()
         }
     }
+
     
     func onLeft(delegate: FaceTriggerDelegate, newLeft: Bool) {
     }
@@ -126,7 +109,7 @@ class SquintEvaluator: BothEvaluator {
     }
     
     init(threshold: Float) {
-        super.init(threshold: threshold, leftKey: .eyeSquintLeft, rightKey: .eyeSquintRight, onBoth: onBoth, onLeft: onLeft, onRight: onRight)
+        super.init(threshold: threshold, leftKey: .eyeSquintLeft, rightKey: .eyeSquintRight, onBoth: SquintEvaluator.onBoth, onLeft: BrowDownEvaluator.onVoid, onRight: BrowDownEvaluator.onVoid)
     }
 }
 
