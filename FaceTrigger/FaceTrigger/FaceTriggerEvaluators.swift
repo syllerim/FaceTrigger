@@ -46,8 +46,22 @@ class BlinkEvaluator: BothEvaluator {
         }
     }
 
+    static var onLeft: (FaceTriggerDelegate, Bool) -> Void = {  delegate, onBoth in
+        delegate.onBlinkLeftDidChange?(blinkingLeft: onBoth)
+        if onBoth {
+            delegate.onBlinkLeft?()
+        }
+    }
+
+    static var onRight: (FaceTriggerDelegate, Bool) -> Void = {  delegate, onBoth in
+        delegate.onBlinkRightDidChange?(blinkingRight: onBoth)
+        if onBoth {
+            delegate.onBlinkRight?()
+        }
+    }
+
     init(threshold: Float) {
-        super.init(threshold: threshold, leftKey: .eyeBlinkLeft, rightKey: .eyeBlinkRight, onBoth: BlinkEvaluator.onBoth, onLeft: BlinkEvaluator.onBoth, onRight: BlinkEvaluator.onBoth)
+        super.init(threshold: threshold, leftKey: .eyeBlinkLeft, rightKey: .eyeBlinkRight, onBoth: BlinkEvaluator.onBoth, onLeft: BlinkEvaluator.onLeft, onRight: BlinkEvaluator.onRight)
     }
 }
 
